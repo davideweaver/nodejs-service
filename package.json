@@ -1,0 +1,40 @@
+{
+  "name": "nodejs-service",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf ./build",
+    "format": "prettier --write \"**/*.{md,js,json,ts,yaml,yml}\"",
+    "lint": "eslint \"{src,test}/**/*.ts\"",
+    "lint-fix": "eslint --fix \"{src,test}/**/*.ts\"",
+    "start": "node ./build/index.js",
+    "test": "jest --runInBand --verbose --coverage --detectOpenHandles",
+    "dev": "npm run clean && npm run build -- --incremental && concurrently -k -n TypeScript,Node -c \"yellow.bold,cyan.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
+    "watch-node": "nodemon --inspect=0.0.0.0:9000 --watch ./build ./build/index.js",
+    "watch-ts": "tsc -w --incremental --preserveWatchOutput"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^27.4.0",
+    "@types/node": "^17.0.18",
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.5.1",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^27.1.3",
+    "ts-node": "^10.5.0",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "dotenv-cra": "^3.0.2"
+  }
+}

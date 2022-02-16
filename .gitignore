@@ -1,0 +1,17 @@
+# Compiled Outputs
+/build
+/tmp
+/src/schemas/v1/index.ts
+
+# Dependencies
+/node_modules
+
+# Misc.
+/coverage
+/typings
+.env.*.local
+npm-debug.log
+
+# System Files
+.DS_Store
+Thumbs.db
