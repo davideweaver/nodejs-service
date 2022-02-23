@@ -11,18 +11,23 @@
     "lint-fix": "eslint --fix \"{src,test}/**/*.ts\"",
     "start": "node ./build/index.js",
     "test": "jest --runInBand --verbose --coverage --detectOpenHandles",
-    "dev": "npm run clean && npm run build -- --incremental && concurrently -k -n TypeScript,Node -c \"yellow.bold,cyan.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
-    "watch-node": "nodemon --inspect=0.0.0.0:9000 --watch ./build ./build/index.js",
-    "watch-ts": "tsc -w --incremental --preserveWatchOutput"
+    "dev": "npm run clean && nodemon"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "dotenv-cra": "^3.0.2",
+    "express": "^4.17.3"
+  },
   "devDependencies": {
+    "@types/express": "^4.17.13",
     "@types/jest": "^27.4.0",
     "@types/node": "^17.0.18",
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.12.0",
+    "esbuild-jest": "^0.5.0",
+    "esbuild-node-tsc": "^1.8.3",
     "eslint": "^8.9.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -30,11 +35,73 @@
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1",
     "rimraf": "^3.0.2",
-    "ts-jest": "^27.1.3",
     "ts-node": "^10.5.0",
     "typescript": "^4.5.5"
   },
-  "dependencies": {
-    "dotenv-cra": "^3.0.2"
+  "nodemonConfig": {
+    "watch": [
+      "src"
+    ],
+    "ignore": [
+      "src/**/*.test.ts"
+    ],
+    "ext": "ts,mjs,js,json,graphql",
+    "exec": "etsc && node --inspect=0.0.0.0:9000 ./build/index.js",
+    "legacyWatch": true
+  },
+  "prettier": {
+    "bracketSpacing": true,
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "useTabs": false
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:prettier/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": 2020,
+      "sourceType": "module"
+    },
+    "rules": {
+      "@typescript-eslint/no-explicit-any": "off"
+    }
+  },
+  "eslintIgnore": [
+    "/node_modules"
+  ],
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.ts"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "./build",
+      "./test",
+      "./src/index.ts"
+    ],
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text",
+      "clover",
+      "cobertura"
+    ],
+    "transform": {
+      "^.+\\.ts?$": "esbuild-jest"
+    },
+    "testEnvironment": "node",
+    "roots": [
+      "./test/",
+      "./src"
+    ],
+    "setupFiles": [
+      "./test/setup.ts"
+    ]
   }
 }
