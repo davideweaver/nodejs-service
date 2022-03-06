@@ -8,17 +8,25 @@ export type Environment = {
   PACKAGE_VERSION: string;
 };
 
-export const loadEnvironment = (env: NodeJS.ProcessEnv): Environment => {
+export interface IRawEnvironment extends NodeJS.ProcessEnv {
+  NODE_ENV: string;
+  RUNTIME_ENV: string;
+}
+
+export const prepareEnvironment = (): IRawEnvironment => {
   // default env vars (pass these in when running in a real environment)
   // NODE_ENV is either production or development used to enable/disable optimizations
   // RUNTIME_ENV indicates the runtime environment used to load a specific .env file
-  env.NODE_ENV = env.NODE_ENV || 'development';
-  env.RUNTIME_ENV = env.RUNTIME_ENV || 'development';
+  process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+  process.env.RUNTIME_ENV = process.env.RUNTIME_ENV || 'development';
 
   // read env files
-  config({ env: env.RUNTIME_ENV });
+  config({ env: process.env.RUNTIME_ENV });
 
-  // parse values
+  return process.env as IRawEnvironment;
+};
+
+export const parseEnvironment = (env: IRawEnvironment): Environment => {
   return {
     PORT: env.PORT || 8000,
     NODE_ENV: env.NODE_ENV,
@@ -28,4 +36,9 @@ export const loadEnvironment = (env: NodeJS.ProcessEnv): Environment => {
   };
 };
 
-export default loadEnvironment(process.env);
+export const getEnvironment = (): Environment => {
+  const env = prepareEnvironment();
+  return parseEnvironment(env);
+};
+
+export default getEnvironment();

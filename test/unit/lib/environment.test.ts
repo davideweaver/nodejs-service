@@ -1,6 +1,6 @@
-import { loadEnvironment } from '../../../src/lib/environment';
+import { parseEnvironment } from '../../../src/lib/environment';
 
-test('should load environment', () => {
+test('should parse environment', () => {
   const env = {
     PORT: 1,
     NODE_ENV: 'node-env',
@@ -9,7 +9,7 @@ test('should load environment', () => {
     npm_package_version: 'version',
   } as any;
 
-  const result = loadEnvironment(env);
+  const result = parseEnvironment(env);
   expect(result).toEqual({
     PORT: 1,
     NODE_ENV: 'node-env',
@@ -19,14 +19,14 @@ test('should load environment', () => {
   });
 });
 
-test('should load empty environment', () => {
+test('should parse empty environment', () => {
   const env = {} as any;
 
-  const result = loadEnvironment(env);
+  const result = parseEnvironment(env);
   expect(result).toEqual({
     PORT: 8000,
-    NODE_ENV: 'development',
-    RUNTIME_ENV: 'development',
+    NODE_ENV: undefined,
+    RUNTIME_ENV: undefined,
     PACKAGE_NAME: 'unknown',
     PACKAGE_VERSION: 'unknown',
   });
